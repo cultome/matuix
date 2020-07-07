@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift('./lib')
+
+require 'matuix'
+
+term = Matuix::Terminal.new
+screen = Matuix::Screen.new(rows: term.max_height, cols: term.max_width)
+
+200.times do |tick|
+  term.print screen.display, [0, 0]
+  sleep 0.1
+end

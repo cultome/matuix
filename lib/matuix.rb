@@ -1,6 +1,7 @@
-require "matuix/version"
+require 'io/console'
+require 'tco'
 
-module Matuix
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require 'matuix/version'
+require 'matuix/word'
+require 'matuix/terminal'
+require 'matuix/screen'
