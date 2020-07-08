@@ -1,8 +1,6 @@
-require_relative 'lib/matuix/version'
-
 Gem::Specification.new do |spec|
   spec.name          = "matuix"
-  spec.version       = Matuix::VERSION
+  spec.version       = "1.0.0"
   spec.authors       = ["Carlos Soria"]
   spec.email         = ["csoria@cultome.io"]
 

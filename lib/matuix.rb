@@ -1,7 +1,9 @@
 require 'io/console'
 require 'tco'
 
-require 'matuix/version'
+module Matuix ; end
+
+require 'matuix/config'
 require 'matuix/word'
 require 'matuix/terminal'
 require 'matuix/screen'

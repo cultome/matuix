@@ -1,43 +1,12 @@
 class Matuix::Word
-  # LETTER = %w[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]
-  LETTER = [
-    "\u00C6",
-    "\u0194",
-    "\u019A",
-    "\u019F",
-    "\u01EE",
-    "\u0283",
-    "\u0376",
-    "\u039E",
-    "\u0403",
-    "\u0480",
-    "\u05E2",
-    "\u05DA",
-    "\u05D1",
-    "\u071B",
-    "\u10F6",
-    "\u13C6",
-    "\u16F8",
-    "\u1965",
-    "\u19A1",
-    "\u1C85",
-    "\u1FFC",
-    "\u2203",
-    "\u2200",
-    "\u22DB",
-    "\u23DA",
-    "\u2A09",
-    "\u2C8A",
-    "\u2C96",
-  ]
-  COLORS = %w[#193300 #336600 #4C9900 #66CC00 #80FF00 #99FF33 #B2FF66 #CCFF99 #E5FFCC]
+  include Matuix::Config
 
-  def initialize(line_size:, word_size:, step_size: rand(1..3), content: nil, started_at: 0)
+  def initialize(line_size:, word_size:, step_size: rand(1..5), content: nil, started_at: 0)
     @line_size = line_size
     @step_size = step_size
     @started_at = started_at
     @word_size = word_size
-    @content = content.nil? ? @line_size.times.map { LETTER.sample } : content.split('')
+    @content = content.nil? ? @line_size.times.map { letters.sample } : content.split('')
   end
 
   def display(tick)
@@ -45,37 +14,37 @@ class Matuix::Word
 
     if step >= @line_size + @word_size
       @started_at = tick + 1
-      return @line_size.times.map { ' ' }
+      return [' '] * @line_size
     end
 
-    chars = if step < @word_size
-             color_word(word_content.take(step)) + [head_letter]
-           else
-             segment = color_word(word_content.drop(step - @word_size).take(@word_size), true)
-             [' '] * (step - @word_size) + segment + [head_letter]
-           end
-
-    (chars + [' '] * @line_size)[0...@line_size]
+    mutate_content! && calculate_content_at(step)
   end
 
-  def word_content
-    @content[rand(@content.size)] = LETTER.sample
+  private
 
-    @content
+  def calculate_content_at(step)
+    if step < @word_size
+      apply_color(@content.take(step)) + [head_letter]
+    else
+      segment = @content.drop(step - @word_size).take(@word_size)
+      [' '] * (step - @word_size) + apply_color(segment) + [head_letter]
+    end[0...@line_size]
   end
 
-  def color_word(value, past = false)
-    color_segment_size = @word_size / COLORS.size
+  def mutate_content!
+    letter_mutation_ratio.times do
+      @content[rand(@content.size)] = letters.sample
+    end
+  end
+
+  def apply_color(value, past = false)
     value.reverse.map.with_index do |letter, idx|
       if letter == ' '
         letter
       else
-        color_id = if past
-                     (@word_size - idx - (@word_size - value.size)) / color_segment_size
-                   else
-                     (@word_size - idx) / color_segment_size
-                   end
-        color = color_id < COLORS.size ? COLORS[color_id] : COLORS.last
+        gone_letters = @word_size > value.size ? @word_size - value.size : 0
+        color_id = (@word_size - idx - gone_letters) / color_segment_size
+        color = color_id < colors.size ? colors[color_id] : colors.last
 
         letter.fg(color)
       end
@@ -83,6 +52,10 @@ class Matuix::Word
   end
 
   def head_letter
-    LETTER.sample.fg("#FFFFFF").bright
+    letters.sample.fg(head_letter_color).bright
+  end
+
+  def color_segment_size
+    @word_size / colors.size
   end
 end

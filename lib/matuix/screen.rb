@@ -2,13 +2,12 @@ class Matuix::Screen
   def initialize(rows:, cols:)
     @tick = 0
     @rows = rows - 1
-    @cols = cols - 1
     @grid = rows.times.map { [' '] * cols }
-    @words = @cols.times.map { nil }
+    @words = cols.times.map { nil }
   end
 
   def display
-    add_line?
+    add_new_word?
 
     @words.each_with_index do |word, word_pos|
       next if word.nil?
@@ -22,12 +21,11 @@ class Matuix::Screen
     @grid.map(&:join).join("\n")
   end
 
-  def add_line?
-    if rand > 0.5
-      new_word_idx = @words.map.with_index { |word, idx| word.nil? ? idx : nil }.compact.sample
+  def add_new_word?
+    return if rand < 0.5
 
-      @words[new_word_idx] = new_word unless new_word_idx.nil?
-    end
+    new_word_idx = @words.map.with_index { |word, idx| word.nil? ? idx : nil }.compact.sample
+    @words[new_word_idx] = new_word unless new_word_idx.nil?
   end
 
   def new_word
