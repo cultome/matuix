@@ -1,10 +1,10 @@
 class Matuix::Terminal
   def initialize
-    # "#{reset}#{clear}#{hide_cursor}#{enable_mouse}"
+    console.print "#{reset}#{clear}"
   end
 
   def max_width
-    console.winsize.last
+    console.winsize.last - 1
   end
 
   def max_height
@@ -38,5 +38,13 @@ class Matuix::Terminal
 
   def console
     @console ||= IO.console
+  end
+
+  def clear
+    "\e[2J"
+  end
+
+  def reset
+    "\e[0m"
   end
 end
