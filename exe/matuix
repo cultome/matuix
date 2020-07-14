@@ -9,12 +9,10 @@ include Matuix::Config
 term = Matuix::Terminal.new
 screen = Matuix::Screen.new(rows: term.max_height, cols: term.max_width)
 
-tick = 0
 loop do
   term.puts screen.display, [0, 0]
 
   sleep tick_duration
-  tick += 1
 rescue Exception
   break
 end

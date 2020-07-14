@@ -37,7 +37,7 @@ class Matuix::Word
     end
   end
 
-  def apply_color(value, past = false)
+  def apply_color(value)
     value.reverse.map.with_index do |letter, idx|
       if letter == ' '
         letter

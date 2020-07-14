@@ -21,6 +21,8 @@ class Matuix::Screen
     @grid.map(&:join).join("\n")
   end
 
+  private
+
   def add_new_word?
     return if rand < 0.5
 
