@@ -27,7 +27,7 @@ class Matuix::Word
       apply_color(@content.take(step)) + [head_letter]
     else
       segment = @content.drop(step - @word_size).take(@word_size)
-      [' '] * (step - @word_size) + apply_color(segment) + [head_letter]
+      [' '] * (step - @word_size) + apply_color(segment, true) + [head_letter]
     end[0...@line_size]
   end
 
@@ -37,12 +37,13 @@ class Matuix::Word
     end
   end
 
-  def apply_color(value)
+  def apply_color(value, exiting = false)
     value.reverse.map.with_index do |letter, idx|
       if letter == ' '
         letter
       else
-        gone_letters = @word_size > value.size ? @word_size - value.size : 0
+        gone_letters = @word_size > value.size && exiting ? @word_size - value.size : 0
+
         color_id = (@word_size - idx - gone_letters) / color_segment_size
         color = color_id < colors.size ? colors[color_id] : colors.last
 

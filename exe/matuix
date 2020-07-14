@@ -4,15 +4,9 @@ $LOAD_PATH.unshift('./lib')
 
 require 'matuix'
 
-include Matuix::Config
-
 term = Matuix::Terminal.new
-screen = Matuix::Screen.new(rows: term.max_height, cols: term.max_width)
 
-loop do
-  term.puts screen.display, [0, 0]
-
-  sleep tick_duration
-rescue Exception
-  break
-end
+Matuix::View.new(
+  term,
+  Matuix::Screen.new(rows: term.max_height, cols: term.max_width),
+).start

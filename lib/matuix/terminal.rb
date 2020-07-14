@@ -1,5 +1,9 @@
 class Matuix::Terminal
   def initialize
+    clean
+  end
+
+  def clean
     console.puts "\e[0m\e[2J"
   end
 
